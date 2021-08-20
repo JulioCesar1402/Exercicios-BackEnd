@@ -115,24 +115,24 @@
 -- ? quem é mais performatica?
 -- & 388ms
 -- Encontra todos os pagamentos deste dia, ignorando horas, minutos e segundos
-SELECT * FROM sakila.payment
-WHERE DATE(payment_date) = '2005-07-31';
+-- SELECT * FROM sakila.payment
+-- WHERE DATE(payment_date) = '2005-07-31';
 
 -- & 47ms
 -- Encontra todos pagamentos deste dia, ignorando horas, minutos e segundos
-SELECT * FROM sakila.payment
-WHERE payment_date LIKE '2005-07-31%';
+-- SELECT * FROM sakila.payment
+-- WHERE payment_date LIKE '2005-07-31%';
 
 -- & 29ms
 -- Encontra um pagamento com dia e hora exatos
-SELECT * FROM sakila.payment
-WHERE payment_date LIKE '2005-08-20 00:30:52';
+-- SELECT * FROM sakila.payment
+-- WHERE payment_date LIKE '2005-08-20 00:30:52';
 
 -- & 50ms
 -- Encontra pagamentos especificando um valor mínimo e um valor máximo para a data
-SELECT *
-FROM sakila.payment
-WHERE payment_date BETWEEN '2005-05-26 00:00:00' AND '2005-05-27 23:59:59';
+-- SELECT *
+-- FROM sakila.payment
+-- WHERE payment_date BETWEEN '2005-05-26 00:00:00' AND '2005-05-27 23:59:59';
 
 -- ? payment_date LIKE '2005-08-20 00:30:52' é a vencedora!!!
 
@@ -178,6 +178,3 @@ WHERE payment_date BETWEEN '2005-05-26 00:00:00' AND '2005-05-27 23:59:59';
 -- AND HOUR(payment_date) = 22;
 
 -- # =========================================================
-
-SELECT * FROM sakila.film
-where rental_duration = 6 and rating IN('PG-13', 'R');
