@@ -192,7 +192,46 @@ SELECT
     ) AS city
 FROM sakila.address;
 
+-- # ====================================================================
 
+-- * Usando o EXISTS na tabela books_lent e books , exiba o id e título dos livros que ainda não foram emprestados.
+
+SELECT id, title FROM hotel.Books as b
+where not EXISTS(
+  SELECT * from hotel.Books_Lent
+  WHERE b.id = book_id
+);
+
+-- * Usando o EXISTS na tabela books_lent e books , exiba o id e título dos livros estão atualmente emprestados e que contêm a palavra "lost" no título.
+
+SELECT id, title from hotel.Books as b
+WHERE EXISTS (
+  SELECT * FROM hotel.Books_Lent
+  WHERE b.id = book_id
+  AND b.title LIKE '%lost%'
+);
+
+
+-- * Usando a tabela carsales e customers , exiba apenas o nome dos clientes que ainda não compraram um carro.
+
+SELECT `Name` FROM hotel.Customers AS c
+WHERE NOT EXISTS (
+  SELECT * FROM hotel.CarSales
+  WHERE c.CustomerId = CustomerId
+);
+
+-- * Usando o comando EXISTS em conjunto com JOIN e as tabelas cars , customers e carsales , exiba o nome do cliente e o modelo do carro de todos os clientes que fizeram compras de carros.
+
+SELECT CT.Name, C.Name FROM hotel.Customers as CT
+INNER JOIN hotel.Cars AS C
+WHERE EXISTS (
+  SELECT * FROM hotel.CarSales
+  WHERE CT.CustomerId = CustomerID
+  AND C.id = CarID
+);
+
+
+-- # ====================================================================
 
 
 
