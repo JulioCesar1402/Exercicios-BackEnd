@@ -132,6 +132,78 @@ from sakila.film as t1, sakila.film as t2
 where t1.rental_duration = t2.rental_duration
 and t2.rental_duration between 2 and 4;
 
+-- # ====================================================================
+
+-- * Todos os funcionários foram promovidos a atores. Monte uma query que exiba a união da tabela staff com a tabela actor , exibindo apenas o nome e o sobrenome . Seu resultado não deve excluir nenhum funcionário ao unir as tabelas.
+
+select first_name, last_name from sakila.staff
+UNION ALL
+select first_name, last_name from sakila.actor;
+
+-- * Monte uma query que una os resultados das tabelas customer e actor , exibindo os nomes que contêm a palavra "tracy" na tabela customer e os que contêm "je" na tabela actor . Exiba apenas os resultados únicos.
+
+Select first_name from sakila.customer
+where first_name like '%tracy%'
+UNION
+Select first_name from sakila.actor
+where first_name like '%je%';
+
+-- * Monte uma query que exiba a união dos cinco últimos nomes da tabela actor , o primeiro nome da tabela staff e cinco nomes a partir da 15ª posição da tabela customer . Não permita que dados repetidos sejam exibidos. Ordene os resultados em ordem alfabética.
+
+(SELECT first_name from sakila.actor
+ORDER BY actor_id DESC
+LIMIT 5)
+UNION
+(SELECT first_name from sakila.staff
+LIMIT 1)
+UNION
+(SELECT first_name from sakila.customer
+LIMIT 5 OFFSET 15)
+ORDER BY first_name;
+
+-- * Você quer exibir uma lista paginada com os nomes e sobrenomes de todos os clientes e atores do banco de dados, em ordem alfabética. Considere que a paginação está sendo feita de 15 em 15 resultados e que você está na 4ª página. Monte uma query que simule esse cenário.
+
+(SELECT first_name, last_name FROM sakila.customer
+ORDER BY first_name, last_name
+LIMIT 60)
+UNION
+(SELECT first_name, last_name FROM sakila.actor
+ORDER BY first_name, last_name
+LIMIT 60)
+ORDER BY first_name, last_name
+LIMIT 15 OFFSET 45;
+
+-- # ====================================================================
+
+SELECT f.title, f.rating
+FROM (
+    SELECT *
+    FROM sakila.film
+    WHERE rating = 'R'
+) AS f;
+
+SELECT
+    address,
+    district,
+    (
+        SELECT city
+        FROM sakila.city
+        WHERE city.city_id = sakila.address.city_id
+    ) AS city
+FROM sakila.address;
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
