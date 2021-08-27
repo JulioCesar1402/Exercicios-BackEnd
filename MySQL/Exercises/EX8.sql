@@ -216,4 +216,119 @@ DELIMITER ;
 
 SELECT ReturnTotalMoviesQTYFunc('ACTION') AS QTY;
 
--- # ==============================================
+-- # =======================================================
+
+USE rede_social;
+
+DELIMITER $$
+CREATE TRIGGER trigger_perfil_insert
+    BEFORE INSERT ON perfil
+    FOR EACH ROW
+BEGIN
+    SET NEW.ultima_atualizacao = NOW(),
+        NEW.acao = 'INSERT';
+END $$
+DELIMITER ;
+
+INSERT INTO perfil(saldo) VALUES (97800);
+
+SELECT * FROM perfil;
+
+-- & +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++======
+
+USE rede_social;
+
+DELIMITER $$
+CREATE TRIGGER trigger_perfil_update
+    BEFORE UPDATE ON perfil
+    FOR EACH ROW
+BEGIN
+    SET NEW.ultima_atualizacao = NOW(),
+        NEW.acao = 'UPDATE';
+END $$
+DELIMITER ;
+
+UPDATE perfil
+SET saldo = 0
+WHERE perfil_id = 1;
+
+SELECT * FROM perfil;
+
+-- & +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+USE rede_social;
+
+DELIMITER $$
+CREATE TRIGGER trigger_perfil_delete
+    AFTER DELETE ON perfil
+    FOR EACH ROW
+BEGIN
+    INSERT INTO log_perfil(acao, data_acao)
+    VALUES ('exclusão', NOW());
+END $$
+DELIMITER ;
+
+DELETE FROM perfil WHERE perfil_id = 3;
+
+SELECT * FROM log_perfil;
+
+-- # =======================================================================
+
+-- * Crie um TRIGGER que, a cada nova inserção feita na tabela carros , defina o valor da coluna data_atualizacao para o momento do ocorrido, a acao para 'INSERÇÃO' e a coluna disponivel_em_estoque para 1 .
+
+USE betrybe_automoveis;
+DELIMITER $$
+CREATE TRIGGER trigger_add_car
+    BEFORE INSERT ON carros
+    FOR EACH ROW
+BEGIN
+    SET NEW.data_atualizacao = NOW(),
+        NEW.acao = 'INSERÇÃO',
+        NEW.disponivel_em_estoque = 1;
+END $$
+DELIMITER ;
+
+INSERT INTO carros(preco) VALUES (0);
+
+SELECT * FROM perfil;
+
+-- * Crie um TRIGGER que, a cada atualização feita na tabela carros , defina o valor da coluna data_atualizacao para o momento do ocorrido e a acao para 'ATUALIZAÇÃO' .
+
+USE betrybe_automoveis;
+DELIMITER $$
+
+CREATE TRIGGER trigger_update_car
+    BEFORE UPDATE ON carros
+    FOR EACH ROW
+BEGIN
+    SET NEW.data_atualizacao = NOW(),
+    NEW.acao = 'ATUALIZAÇÃO';
+END $$
+
+DELIMITER ;
+
+UPDATE carros
+SET preco = 5
+WHERE id_carro = 1;
+
+
+-- * Crie um TRIGGER que, a cada exclusão feita na tabela carros , envie para a tabela log_operacoes as informações do tipo_operacao como 'EXCLUSÃO' e a data_ocorrido como o momento da operação.
+
+USE betrybe_automoveis;
+DELIMITER $$
+
+CREATE TRIGGER trigger_delete_car
+    AFTER DELETE ON carros
+    FOR EACH ROW
+BEGIN
+    iNSERT INTO log_operacoes(tipo_operacao, data_ocorrido)
+    VALUES('EXCLUSÃO', NOW());
+END $$
+DELIMITER ;
+
+
+DELETE FROM carros WHERE id_carro = 1;
+SELECT * FROM log_operacoes;
+
+
+-- # =======================================================================
