@@ -78,24 +78,81 @@ CALL ShowTop10Actors();
 
 -- * Monte uma procedure que receba como parâmetro de entrada o nome da categoria desejada em uma string e que exiba o id do filme , seu titulo , o id de sua categoria e o nome da categoria selecionada. Use as tabelas film , film_category e category para montar essa procedure.
 
+use sakila;
+DELIMITER $$
+
+CREATE PROCEDURE ShowMovieDetailsFromCategory(IN film_category_string VARCHAR(100))
+BEGIN
+    SELECT f.film_id, f.title, fc.category_id, c.name
+    FROM sakila.film f
+    INNER JOIN sakila.film_category fc
+    ON fc.film_id = f.film_id
+    INNER JOIN sakila.category c
+    ON c.category_id = fc.category_id
+    WHERE c.name = film_category_string;
+END $$
+
+DELIMITER ;
+use sakila;
+CALL ShowMovieDetailsFromCategory('Action');
+
 
 -- * Monte uma procedure que receba o email de um cliente como parâmetro de entrada e diga se o cliente está ou não ativo, através de um parâmetro de saída.
 
+USE sakila;
+DELIMITER $$
 
+CREATE PROCEDURE ShowCustomerActive
+(in email_customer VARCHAR(200), OUT active_customer INT)
+BEGIN
+    SELECT active INTO active_customer
+    FROM sakila.customer
+    WHERE email = email_customer;
+END $$
+DELIMITER;
 
+CALL ShowCustomerActive('MARY.SMITH@sakilacustomer.org', @active);
+SELECT @active;
 
+-- # =========================================================================================
 
+USE sakila;
+DELIMITER $$
 
+CREATE PROCEDURE ShouLengthWithInANDOut(
+    IN film_name VARCHAR(300),
+    OUT length1 DOUBLE
+)
+BEGIN
+    SELECT LENGTH(film_name)
+    INTO length1;
+END $$
 
+DELIMITER ;
 
+-- Como usar:
 
+CALL ShouLengthWithInANDOut('ACADEMY DINOSAUR', @length1);
+SELECT @length1;
 
+-- # ==========================================================================================
 
+USE sakila;
+DELIMITER $$
 
+CREATE PROCEDURE ShouLengthWithInOut(INOUT film_name VARCHAR(300))
+BEGIN
+    SELECT LENGTH(film_name)
+    INTO film_name;
+END $$
 
+DELIMITER ;
 
+-- Como usar:
 
-
+SELECT 'ACADEMY DINOSAUR' INTO @movie_title;
+CALL ShouLengthWithInOut(@movie_title);
+SELECT @movie_title;
 
 
 
