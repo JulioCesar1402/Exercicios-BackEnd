@@ -154,15 +154,66 @@ SELECT 'ACADEMY DINOSAUR' INTO @movie_title;
 CALL ShouLengthWithInOut(@movie_title);
 SELECT @movie_title;
 
+-- # ==============================================
+
+-- * Utilizando a tabela sakila.payment , monte uma function que retorna a quantidade total de pagamentos feitos até o momento por um determinado customer_id .
+
+USE sakila;
+DELIMITER $$
+
+CREATE FUNCTION ReturnTotalPaymentQTY(customerId DOUBLE)
+RETURNS INT READS SQL DATA
+BEGIN
+    DECLARE totalPaymentQTY INT;
+    SELECT COUNT(*) FROM sakila.payment
+    WHERE customer_id = customerId
+    INTO totalPaymentQTY;
+    RETURN totalPaymentQTY;
+END $$
+DELIMITER ;
+
+SELECT ReturnTotalPaymentQTY(5);
 
 
+-- * Crie uma function que, dado o parâmetro de entrada inventory_id , retorna o nome do filme vinculado ao registro de inventário com esse id.
 
+USE sakila;
+DELIMITER $$
 
+CREATE FUNCTION ReturnMovieTitle(InventoryId DOUBLE)
+RETURNS VARCHAR(100) READS SQL DATA
+BEGIN
+    DECLARE MovieTitle VARCHAR(200);
+    SELECT title FROM sakila.film
+    WHERE film_id IN (
+        SELECT film_id FROM sakila.inventory
+        WHERE inventory_id = InventoryId
+    ) INTO MovieTitle;
+    RETURN MovieTitle;
+END $$
+DELIMITER ;
 
+SELECT ReturnMovieTitle(9);
 
+-- * Crie uma function que receba uma determinada categoria de filme em formato de texto (ex: 'Action' , 'Horror' ) e retorna a quantidade total de filmes registrados nessa categoria.
 
+USE sakila;
+DELIMITER $$
 
+CREATE FUNCTION ReturnTotalMoviesQTYFunc(MovieCategory VARCHAR(100))
+RETURNS INT READS SQL DATA
+BEGIN
+    DECLARE TotalMovies INT;
+    SELECT COUNT(*) FROM sakila.film_category
+    WHERE category_id IN (
+        SELECT category_id FROM sakila.category
+        WHERE `name` = MovieCategory
+    )
+    INTO TotalMovies;
+    RETURN TotalMovies;
+END $$
+DELIMITER ;
 
-
+SELECT ReturnTotalMoviesQTYFunc('ACTION') AS QTY;
 
 -- # ==============================================
