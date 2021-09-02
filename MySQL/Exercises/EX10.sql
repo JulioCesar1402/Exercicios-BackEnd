@@ -39,4 +39,4 @@ CREATE DATABASE w3schools2;
 exit;
 
 -- na pasta com o arquivo de backoup
--- & mysql -u root -p w3schools2 < w3schools.sql
+-- & mysql -u root -p w3schools2 < w3schools.sql;

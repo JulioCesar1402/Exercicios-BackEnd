@@ -92,3 +92,4 @@ CREATE TABLE IF NOT EXISTS Zoo.Animal(
   carer_id INT NOT NULL,
   FOREIGN KEY (carer_id) REFERENCES Carer(carer_id)
 );
+
