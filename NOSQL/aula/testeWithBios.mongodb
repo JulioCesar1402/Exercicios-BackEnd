@@ -1,0 +1,17 @@
+db.bios.find();
+
+db.bios.find( { _id: 5 } );
+
+db.bios.find( { "name.last": "Hopper" } );
+
+db.bios.find({}, { name: 1 });
+
+db.bios.find().limit(5);
+
+db.bios.find().limit(5).pretty();
+
+db.bios.find()
+
+db.bios.find().skip(2)
+
+db.bios.find().limit(10).skip(5)

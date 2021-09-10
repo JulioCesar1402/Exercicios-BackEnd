@@ -1,0 +1,47 @@
+use sample;
+
+db.products.insertOne({
+  _id: 1,
+  "productName": "Caixa",
+  "price": 20
+});
+
+db.products.find();
+
+db.products.insertMany([
+  { "productName": "Lapis", "stock": 10, "price": 20,"status":"A"},
+  { "productName": "Tesoura", "price": 5, "status": "B" },
+  { "productName": "Borracha", "price": 15, "status": "A" }
+]);
+
+db.products.find();
+
+db.movies.insertOne(
+    {
+        "title" : "Forrest Gump",
+        "category" : [ "drama", "romance" ],
+        "imdb_rating" : 8.8,
+        "filming_locations" : [
+            { "city" : "Savannah", "state" : "GA", "country" : "USA" },
+            { "city" : "Monument Valley", "state" : "UT", "country" : "USA" },
+            { "city" : "Los Anegeles", "state" : "CA", "country" : "USA" }
+        ],
+        "box_office" : {
+            "gross" : 557, "opening_weekend" : 24, "budget" : 55
+        }
+    }
+)
+
+db.movies.find();
+
+db.movies.findOne(
+    { "title" : "Forrest Gump" },
+    { "title" : 1, "imdb_rating" : 1 }
+);
+
+db.movies.findOne(
+    { "title" : "Forrest Gump" },
+    { "title" : 1, "imdb_rating" : 1, "_id": 0 }
+)
+
+db.products.find()
