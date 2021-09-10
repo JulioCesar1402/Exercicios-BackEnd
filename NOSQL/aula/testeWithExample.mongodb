@@ -1,0 +1,11 @@
+use test;
+
+db.example.insertMany([
+    { "name": "Mandioquinha Frita", "price": 14 },
+    { "name": "Litrão", "price": 8 },
+    { "name": "Torresmo", "price": 16 }
+]);
+
+db.example.find().sort({ "price": 1 }).pretty();
+
+db.example.find().sort({ "price": -1 }, { "name" : 1 }).pretty()
