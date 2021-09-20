@@ -1,0 +1,196 @@
+db.articles.aggregate(
+  [{ $match: { author: "dave" } }]
+);
+
+db.articles.aggregate([
+  { $match: {
+    $or: [
+      {score: { $gt: 70, $lt: 90 } },
+      {views: { $gte: 1000 } },
+    ]
+  } }
+]);
+
+// Selecione todas as transações feitas pelo cliente chamado "Dave America".
+
+db.transactions.aggregate([
+  { $match: {
+    from: "Dave America"
+  }}
+]);
+
+// Selecione todas as transações com o valor entre 700 e 6000, ou que sejam recebidas pela cliente "Lisa Simpson".
+
+db.transactions.aggregate([
+  { $match: {
+    $or: [
+      { value: { $gte: 700, $lte: 6000 }},
+      { from: "Lisa Simpson"}
+    ],
+  }},
+]);
+
+// Selecione três transações com o valor acima de 1000.
+
+db.transactions.aggregate([
+  { $match: {
+    value: { $gte: 1000 },
+  } },
+  { $limit: 3 },
+]);
+
+//========================================================================
+
+db.books.aggregate([
+  { $project: {
+    title: 1,
+    author: 1
+  }}
+]);
+
+db.books.aggregate([
+  { $project: {
+    _id: 0,
+    title: 1,
+    author: 1
+  } }
+]);
+
+db.books.aggregate([
+  {
+    $project : {
+      copies: 0
+    }
+  }
+]);
+
+db.books.aggregate([
+  {
+    $project : {
+      "author.first": 0,
+      copies: 0
+    }
+  }
+]);
+
+db.books.aggregate([
+  {
+    $project: {
+      title: 1,
+      isbn: {
+        prefix: { $substr: ["$isbn", 0, 3] },
+        group: { $substr: ["$isbn", 3, 2] },
+        publisher: { $substr: ["$isbn", 5, 4] },
+        title: { $substr: ["$isbn", 9, 3] },
+        checkDigit: { $substr: ["$isbn", 12, 1] }
+      },
+      lastName: "$author.last",
+      copiesSold: "$copies"
+    }
+  }
+]);
+
+db.sales.aggregate([
+  {
+    $group: {
+      _id: null,
+      count: { $sum: 1 }
+    }
+  }
+]);
+
+db.sales.aggregate([
+  {
+    $group : {
+      _id : "$item",
+      count: { $sum: 1}
+    }
+  }
+]);
+
+db.sales.aggregate([
+  {
+    $group : {
+      _id : "$item",
+      totalSaleAmount: {
+        $sum: {
+          $multiply: ["$price", "$quantity"]
+        }
+      }
+    }
+  }
+]);
+
+db.sales.aggregate([
+  {
+    $group: {
+      _id : "$item",
+      totalSaleAmount: {
+        $sum: {
+          $multiply: ["$price", "$quantity"]
+        }
+      }
+    }
+  },
+  {
+    $match: { "totalSaleAmount": { $gte: 100 } }
+  }
+]);
+
+db.sales.aggregate([
+  {
+    $group : {
+      _id : null,
+      totalSaleAmount: {
+        $sum: { $multiply: ["$price", "$quantity"] }
+      },
+      averageQuantity: { $avg: "$quantity" },
+      count: { $sum: 1 }
+    }
+  }
+]);
+
+// Selecione todos os bancos, ou seja, valores do campo bank ;
+
+db.transactions.aggregate([
+  { $group: {
+    _id: "bank",
+    totalDeBancos: {
+      $sum: 1
+    }
+  } }
+]);
+
+// Selecione o valor total das transações em cada banco e quantas são;
+
+db.transactions.aggregate([
+  { $group: {
+      _id: '$bank',
+      total: { $sum: '$value' },
+      transações: { $sum: 1 },
+    },
+  },
+]);
+
+// Selecione o valor total de transações por banco;
+
+db.transactions.aggregate([
+  { $group: {
+      _id: '$bank',
+      total: { $sum: '$value' },
+    },
+  },
+]);
+
+// Selecione os bancos que têm o valor total de transações maior que 1000.
+
+
+db.transactions.aggregate([
+  { $group: {
+    _id: "$bank",
+    total: { $sum: "$value" },
+  }},
+  {$match: {
+    total: { $gt: 1000 }
+  }}
+])
